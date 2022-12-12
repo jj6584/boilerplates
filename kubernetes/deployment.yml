@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: appname #name of the deployment..
+  namespace: namespace #name of k8 namespace
+  labels:
+    app: my-app #name of the application
+spec:
+  selector:
+    matchLabels:
+      app: my-app #name of your applcation
+  replicas: 1 # number of application running
+  template:
+    metadata:
+      labels:
+        app: my-app #name of application
+    spec:
+      containers:
+      #Containers are the individual pieces of your application that youy want to run
+      - name: web-app #name of the container
+        image: web-app:latest # Image you want to run
+          # resources:
+          #   limits:
+          #     memory: 512Mi
+          #     cpu: "1"
+          #   requests:
+          #     memory: 256Mi
+          #     CPU: "0.2"
+        ports:
+        # ports are the ports that your application uses
+        - containerPort: 8080 #The port of the Application uses
+        volumeMounts:
+        # Volumes that your application uses
+        - mountPath: /var/www/html # the path of your application uses
+          name: v010 #name of the volume
+      volumes:
+      # Volumes are the persistent storage that your applcation uses
+      - name: v010 #volume name
+        persistentVolumeClaim:
+          claimName: pvc0 # name of the persistent volume claim
